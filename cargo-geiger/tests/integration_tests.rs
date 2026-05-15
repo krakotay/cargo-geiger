@@ -8,7 +8,7 @@ use self::run::run_geiger_with;
 
 use insta::assert_snapshot;
 use rstest::rstest;
-use std::env;
+// use std::env;
 use std::process::Output;
 
 #[rstest(
