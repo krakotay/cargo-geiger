@@ -215,7 +215,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6fa9e1d11a268684cbd90ed36370d7577afb6c62d912ddff5c15fc34343e5036"
 dependencies = [
  "backtrace",
- "console",
+ "console 0.15.11",
 ]
 
 [[package]]
@@ -444,7 +444,7 @@ dependencies = [
  "cargo-platform",
  "cargo-util",
  "colored",
- "console",
+ "console 0.16.3",
  "fs_extra",
  "geiger",
  "insta",
@@ -647,8 +647,19 @@ dependencies = [
  "encode_unicode",
  "libc",
  "once_cell",
- "unicode-width",
  "windows-sys 0.59.0",
+]
+
+[[package]]
+name = "console"
+version = "0.16.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d64e8af5551369d19cf50138de61f1c42074ab970f74e99be916646777f8fc87"
+dependencies = [
+ "encode_unicode",
+ "libc",
+ "unicode-width",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -2434,7 +2445,7 @@ version = "1.42.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "50259abbaa67d11d2bcafc7ba1d094ed7a0c70e3ce893f0d0997f73558cb3084"
 dependencies = [
- "console",
+ "console 0.15.11",
  "linked-hash-map",
  "once_cell",
  "pin-project",
