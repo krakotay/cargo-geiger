@@ -2,7 +2,7 @@
 authors = ["anderejd <rajder@gmail.com>"]
 categories = ["development-tools", "parsing"]
 description = "Some library parts of cargo-geiger, decoupled from cargo."
-edition = "2018"
+edition = "2024"
 keywords = ["unsafe"]
 license = "Apache-2.0 OR MIT"
 name = "geiger"

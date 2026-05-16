@@ -2,14 +2,13 @@
 authors = ["anderejd <rajder@gmail.com>"]
 categories = ["command-line-utilities", "development-tools", "development-tools::cargo-plugins", "parsing"]
 description = "Detects usage of unsafe Rust in a Rust crate and its dependencies."
-edition = "2018"
+edition.workspace = true
 keywords = ["unsafe", "cargo", "plugin"]
 license = "Apache-2.0 OR MIT"
 name = "cargo-geiger"
 readme = "README.md"
 repository = "https://github.com/rust-secure-code/cargo-geiger"
 version = "0.13.0"
-rust-version = "1.85"
 
 [badges]
 maintenance = { status = "experimental" }
@@ -18,12 +17,11 @@ maintenance = { status = "experimental" }
 anyhow = "1.0.97"
 cargo = "0.96.0"
 cargo-geiger-serde = { path = "../cargo-geiger-serde", version = "0.3.0" }
-cargo-platform = "0.1.9"
+cargo-platform = "0.3.3"
 colored = "3.0.0"
 console = "0.15.11"
 geiger = { path = "../geiger", version = "0.5.0" }
-krates = { version = "0.18.1", features = ["metadata"] }
-petgraph = "0.7.1"
+krates = "0.21.1"
 pico-args = "0.5.0"
 rayon = "1.10.0"
 regex = "1.11.1"
@@ -35,8 +33,8 @@ walkdir = "2.5.0"
 url = "2.5.4"
 cargo-util = "0.2.18"
 
-[features]
-vendored-openssl = ["cargo/vendored-openssl"]
+# [features]
+# vendored-openssl = ["cargo/vendored-openssl"]
 
 [dev-dependencies]
 assert_cmd = "2.0.10"

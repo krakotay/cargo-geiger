@@ -17,7 +17,7 @@ use table::scan_to_table;
 use cargo::core::compiler::UserIntent;
 use cargo::core::resolver::features::CliFeatures;
 use cargo::core::Workspace;
-use cargo::ops::CompileOptions;
+use cargo::ops::{CompileFilter, CompileOptions};
 use cargo::{CliError, GlobalContext};
 use cargo_geiger_serde::{ReportEntry, SafetyReport};
 use krates::cm::PackageId;
@@ -67,6 +67,19 @@ fn build_compile_options<'a>(
         uses_default_features,
     )
     .unwrap();
+
+    compile_options.filter = CompileFilter::from_raw_arguments(
+        false,
+        Vec::new(),
+        false,
+        Vec::new(),
+        false,
+        Vec::new(),
+        false,
+        Vec::new(),
+        false,
+        false,
+    );
 
     // TODO: Investigate if this is relevant to cargo-geiger.
     //let mut bins = Vec::new();
@@ -210,5 +223,12 @@ mod default_tests {
             !compile_options.cli_features.uses_default_features,
             args.no_default_features
         );
+
+        assert!(matches!(
+            compile_options.filter,
+            CompileFilter::Default {
+                required_features_filterable: true,
+            }
+        ));
     }
 }

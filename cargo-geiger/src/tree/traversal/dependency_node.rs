@@ -8,8 +8,8 @@ use super::construct_tree_vines_string;
 use super::walk_dependency_kind;
 
 use krates::cm::{DependencyKind, PackageId};
-use petgraph::visit::EdgeRef;
-use petgraph::EdgeDirection;
+use krates::petgraph::visit::EdgeRef;
+use krates::petgraph::EdgeDirection;
 use std::collections::HashMap;
 
 pub fn walk_dependency_node(
@@ -96,7 +96,7 @@ mod dependency_node_tests {
 
     use geiger::IncludeTests;
     use krates::cm::DependencyKind;
-    use petgraph::graph::NodeIndex;
+    use krates::petgraph::graph::NodeIndex;
     use rstest::*;
 
     #[rstest(
@@ -142,7 +142,7 @@ mod dependency_node_tests {
         expected_normal_nodes_length: usize,
     ) {
         let mut inner_graph =
-            petgraph::Graph::<PackageId, DependencyKind>::new();
+            krates::petgraph::Graph::<PackageId, DependencyKind>::new();
         let mut nodes = HashMap::<PackageId, NodeIndex>::new();
 
         let package_ids = create_cargo_metadata_package_id_vec(7);
@@ -190,7 +190,7 @@ mod dependency_node_tests {
 
     fn add_edges_to_graph(
         directed_edges: &[(usize, usize, DependencyKind)],
-        graph: &mut petgraph::Graph<PackageId, DependencyKind>,
+        graph: &mut krates::petgraph::Graph<PackageId, DependencyKind>,
         nodes: &HashMap<PackageId, NodeIndex>,
         package_ids: &[PackageId],
     ) {

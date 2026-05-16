@@ -14,7 +14,7 @@ use cargo::core::Workspace;
 use cargo::util::{important_paths, CargoResult};
 use cargo::GlobalContext;
 use cargo_platform::Cfg;
-use krates::cm::{CargoOpt, MetadataCommand};
+use krates::cm::MetadataCommand;
 use krates::Builder as KratesBuilder;
 use krates::Krates;
 use std::path::PathBuf;
@@ -32,19 +32,22 @@ pub fn get_cargo_metadata(
     let mut metadata_command = MetadataCommand::new();
     metadata_command.manifest_path(root_manifest_path);
 
-    if let Some(metadata_command_features) = match &args.features_args {
+    let mut metadata_options = Vec::new();
+    match &args.features_args {
         features_args if features_args.all_features => {
-            Some(CargoOpt::AllFeatures)
+            metadata_options.push("--all-features".to_string());
         }
         features_args if features_args.no_default_features => {
-            Some(CargoOpt::NoDefaultFeatures)
+            metadata_options.push("--no-default-features".to_string());
         }
         features_args if !features_args.features.is_empty() => {
-            Some(CargoOpt::SomeFeatures(args.features_args.features.clone()))
+            metadata_options.push("--features".to_string());
+            metadata_options.push(args.features_args.features.join(","));
         }
-        _ => None,
-    } {
-        metadata_command.features(metadata_command_features);
+        _ => {}
+    }
+    if !metadata_options.is_empty() {
+        metadata_command.other_options(metadata_options);
     }
 
     Ok(metadata_command.exec()?)

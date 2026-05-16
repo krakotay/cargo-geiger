@@ -60,7 +60,6 @@ pub fn get_kind_group_name(dep_kind: DependencyKind) -> Option<&'static str> {
         DependencyKind::Build => Some("[build-dependencies]"),
         DependencyKind::Development => Some("[dev-dependencies]"),
         DependencyKind::Normal => None,
-        _ => panic!("Unrecognised Dependency Kind"),
     }
 }
 

@@ -251,7 +251,7 @@ fn update_package_id_to_metrics_with_rs_file_metrics(
 mod find_tests {
     use super::*;
 
-    use krates::cm::{CargoOpt, MetadataCommand};
+    use krates::cm::MetadataCommand;
     use rstest::*;
     use std::fs::File;
     use std::io;
@@ -389,7 +389,7 @@ mod find_tests {
     fn get_current_workspace_package() -> krates::cm::Package {
         let metadata = MetadataCommand::new()
             .manifest_path("./Cargo.toml")
-            .features(CargoOpt::AllFeatures)
+            .other_options(vec!["--all-features".to_string()])
             .exec()
             .unwrap();
 

@@ -64,7 +64,7 @@ pub mod display_tests {
     use crate::format::pattern::Pattern;
     use crate::format::Chunk;
 
-    use krates::cm::{CargoOpt, MetadataCommand};
+    use krates::cm::MetadataCommand;
     use krates::Builder as KratesBuilder;
     use rstest::*;
 
@@ -90,7 +90,7 @@ pub mod display_tests {
     ) {
         let metadata = MetadataCommand::new()
             .manifest_path("./Cargo.toml")
-            .features(CargoOpt::AllFeatures)
+            .other_options(vec!["--all-features".to_string()])
             .exec()
             .unwrap();
 

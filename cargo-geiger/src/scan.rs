@@ -22,9 +22,9 @@ use cargo_geiger_serde::{
     CounterBlock, DependencyKind, PackageInfo, UnsafeInfo,
 };
 use krates::cm::PackageId;
+use krates::petgraph::prelude::NodeIndex;
+use krates::petgraph::visit::EdgeRef;
 use krates::NodeId;
-use petgraph::prelude::NodeIndex;
-use petgraph::visit::EdgeRef;
 use std::collections::{HashMap, HashSet};
 use std::error::Error;
 use std::fmt;

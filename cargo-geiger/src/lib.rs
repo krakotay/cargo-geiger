@@ -26,14 +26,14 @@ mod tree;
 
 #[cfg(test)]
 mod lib_tests {
-    use krates::cm::{CargoOpt, Metadata, MetadataCommand};
+    use krates::cm::{Metadata, MetadataCommand};
     use krates::Builder as KratesBuilder;
     use krates::Krates;
 
     pub fn construct_krates_and_metadata() -> (Krates, Metadata) {
         let metadata = MetadataCommand::new()
             .manifest_path("./Cargo.toml")
-            .features(CargoOpt::AllFeatures)
+            .other_options(vec!["--all-features".to_string()])
             .exec()
             .unwrap();
 

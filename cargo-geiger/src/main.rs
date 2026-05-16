@@ -8,7 +8,6 @@
 
 extern crate cargo;
 extern crate colored;
-extern crate petgraph;
 extern crate strum;
 extern crate strum_macros;
 

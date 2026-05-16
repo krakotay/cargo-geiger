@@ -85,7 +85,7 @@ mod tree_tests {
     use crate::format::print_config::OutputFormat;
 
     use geiger::IncludeTests;
-    use petgraph::EdgeDirection;
+    use krates::petgraph::EdgeDirection;
     use rstest::*;
 
     #[rstest(

@@ -102,10 +102,6 @@ impl ToCargoGeigerDependencyKind for CargoMetadataDependencyKind {
             CargoMetadataDependencyKind::Normal => {
                 Some(CargoGeigerSerdeDependencyKind::Normal)
             }
-            _ => {
-                eprintln!("Unrecognised Dependency Kind");
-                None
-            }
         }
     }
 }

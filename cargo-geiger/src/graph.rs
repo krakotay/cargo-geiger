@@ -4,22 +4,21 @@ use extra_deps::ExtraDeps;
 
 use crate::args::{Args, DepsArgs, TargetArgs};
 use crate::cli::get_cfgs;
-use crate::mapping::{
-    CargoMetadataParameters, DepsNotReplaced, MatchesIgnoringSource,
-};
+use crate::mapping::{CargoMetadataParameters, DepsNotReplaced};
 
 use cargo::util::CargoResult;
-use cargo_platform::Cfg;
+use cargo_platform::{Cfg, Platform};
 use krates::cm::{Dependency, DependencyKind, Package, PackageId};
+use krates::petgraph::graph::NodeIndex;
 use krates::{Kid, Node};
-use petgraph::graph::NodeIndex;
 use std::collections::hash_map::Entry;
 use std::collections::HashMap;
 use std::path::PathBuf;
+use std::str::FromStr;
 
 /// Representation of the package dependency graph
 pub struct Graph {
-    pub graph: petgraph::Graph<PackageId, DependencyKind>,
+    pub graph: krates::petgraph::Graph<PackageId, DependencyKind>,
     pub nodes: HashMap<PackageId, NodeIndex>,
 }
 
@@ -41,7 +40,7 @@ pub fn build_graph<'a>(
     let cfgs = get_cfgs(global_rustc_path, &args.target_args.target)?;
 
     let mut graph = Graph {
-        graph: petgraph::Graph::new(),
+        graph: krates::petgraph::Graph::new(),
         nodes: HashMap::new(),
     };
     graph.nodes.insert(
@@ -177,11 +176,11 @@ fn filter_dependencies<'a>(
         .dependencies
         .iter()
         .filter(|d| {
-            d.matches_ignoring_source(
-                cargo_metadata_parameters.krates,
+            dependency_matches_package_id(
+                d,
                 dependency_package_id,
+                cargo_metadata_parameters,
             )
-            .unwrap_or(false)
         })
         .filter(|d| graph_configuration.extra_deps.allows(d.kind))
         .filter(|d| {
@@ -191,7 +190,9 @@ fn filter_dependencies<'a>(
                     graph_configuration.target.map(
                         |t| match graph_configuration.cfgs {
                             None => false,
-                            Some(cfgs) => p.matches(t, cfgs),
+                            Some(cfgs) => Platform::from_str(p)
+                                .map(|platform| platform.matches(t, cfgs))
+                                .unwrap_or(false),
                         },
                     )
                 })
@@ -200,9 +201,27 @@ fn filter_dependencies<'a>(
         .collect::<Vec<&Dependency>>()
 }
 
+fn dependency_matches_package_id(
+    dependency: &Dependency,
+    package_id: &PackageId,
+    cargo_metadata_parameters: &CargoMetadataParameters,
+) -> bool {
+    cargo_metadata_parameters
+        .metadata
+        .packages
+        .iter()
+        .find(|p| p.id == *package_id)
+        .map(|package| {
+            package.name == dependency.name
+                && dependency.req.matches(&package.version)
+        })
+        .unwrap_or(false)
+}
+
 #[cfg(test)]
 mod graph_tests {
     use super::*;
+    use crate::lib_tests::construct_krates_and_metadata;
     use rstest::*;
 
     #[rstest(
@@ -295,5 +314,35 @@ mod graph_tests {
         );
 
         assert_eq!(target, expected_target);
+    }
+
+    #[rstest]
+    fn dependency_matches_package_id_uses_metadata_package_set() {
+        let (krates, metadata) = construct_krates_and_metadata();
+        let package = metadata
+            .packages
+            .iter()
+            .find(|package| package.name == "cargo-geiger")
+            .unwrap();
+        let dependency = package
+            .dependencies
+            .iter()
+            .find(|dependency| dependency.name == "krates")
+            .unwrap();
+        let dependency_package = metadata
+            .packages
+            .iter()
+            .find(|package| package.name == "krates")
+            .unwrap();
+        let cargo_metadata_parameters = CargoMetadataParameters {
+            krates: &krates,
+            metadata: &metadata,
+        };
+
+        assert!(dependency_matches_package_id(
+            dependency,
+            &dependency_package.id,
+            &cargo_metadata_parameters,
+        ));
     }
 }

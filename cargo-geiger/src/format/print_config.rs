@@ -5,7 +5,7 @@ use crate::format::{CrateDetectionStatus, FormatError};
 use cargo::util::errors::CliError;
 use colored::{ColoredString, Colorize};
 use geiger::IncludeTests;
-use petgraph::{Direction, EdgeDirection};
+use krates::petgraph::{Direction, EdgeDirection};
 use strum_macros::EnumString;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
